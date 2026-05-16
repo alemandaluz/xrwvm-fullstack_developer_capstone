@@ -18,6 +18,23 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
+from djangoapp import views
+
+app_name = 'djangoapp'
+
+urlpatterns = [
+    # ... (Tus otras rutas que ya tengas, como login, logout, etc) ...
+
+    # Ruta para obtener la lista de todos los concesionarios (dealers)
+    path(route='get_dealers', view=views.get_dealerships, name='get_dealers'),
+    
+    # Ruta para obtener los concesionarios filtrados por un estado concreto
+    path(route='get_dealers/<str:state>', view=views.get_dealerships, name='get_dealers_by_state'),
+
+    # ... (Cualquier otra ruta) ...
+]
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
