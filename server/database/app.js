@@ -14,11 +14,6 @@ const dealerships_data = JSON.parse(fs.readFileSync("./data/dealerships.json", '
 // Apagar el buffering para evitar que las peticiones se queden colgadas esperando
 mongoose.set('bufferCommands', false);
 
-mongoose.connect("mongodb://mongo_db:27017/", { dbName: 'dealershipsDB', serverSelectionTimeoutMS: 3000 })
-  .then(() => console.log("Connected to MongoDB successfully!"))
-  .catch(err => console.error("MongoDB connection error:", err));
-
-
 const Reviews = require('./review');
 const Dealerships = require('./dealership');
 
@@ -35,8 +30,13 @@ const populateDatabase = async () => {
   }
 };
 
-populateDatabase();
-
+// Conectamos a MongoDB y, SOLO cuando tenga éxito, llamamos a populateDatabase()
+mongoose.connect("mongodb://mongo_db:27017/", { dbName: 'dealershipsDB', serverSelectionTimeoutMS: 3000 })
+  .then(() => {
+    console.log("Connected to MongoDB successfully!");
+    populateDatabase(); // ¡La magia de la sincronización ocurre aquí!
+  })
+  .catch(err => console.error("MongoDB connection error:", err));
 
 // Express route to home
 app.get('/', async (req, res) => {
