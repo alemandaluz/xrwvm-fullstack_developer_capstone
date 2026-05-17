@@ -34,8 +34,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://localhost',
     'https://miguel123414-4173.theianext-0-labs-prod-misc-tools-us-east-0'
     '.proxy.cognitiveclass.ai',
-    'https://miguel123414-8000.theiadockernext-1-labs-prod-theiak8s-4-tor01.''
-    proxy.cognitiveclass.ai']
+    'https://miguel123414-8000.theiadockernext-1-labs-prod-theiak8s-4-tor01.'
+    'proxy.cognitiveclass.ai']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [],
