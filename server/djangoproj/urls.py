@@ -23,27 +23,23 @@ from djangoapp import views
 app_name = 'djangoapp'
 
 urlpatterns = [
-    # ... (Tus otras rutas que ya tengas, como login, logout, etc) ...
-
-    # Ruta para obtener la lista de todos los concesionarios (dealers)
-    path(route='get_dealers', view=views.get_dealerships, name='get_dealers'),
-    
-    # Ruta para obtener los concesionarios filtrados por un estado concreto
-    path(route='get_dealers/<str:state>', view=views.get_dealerships, name='get_dealers_by_state'),
-
-    # ... (Cualquier otra ruta) ...
-]
-
-
-
-urlpatterns = [
+    # Rutas de administración y de la API (Backend)
     path('admin/', admin.site.urls),
-    path('djangoapp/', include('djangoapp.urls')),
+    path('djangoapp/', include('djangoapp.urls')), # Aquí viven get_dealers y la lógica interna
+    
+    # Rutas estáticas puras
     path('', TemplateView.as_view(template_name="Home.html")),
     path('about/', TemplateView.as_view(template_name="About.html")),
     path('contact/', TemplateView.as_view(template_name="Contact.html")),
+    
+    # Rutas delegadas a React (Frontend)
     path('login/', TemplateView.as_view(template_name="index.html")),
     path('register/', TemplateView.as_view(template_name="index.html")),
     path('dealers/', TemplateView.as_view(template_name="index.html")),
+    path('dealer/<int:dealer_id>', TemplateView.as_view(template_name="index.html")),
+    path('reviews/', TemplateView.as_view(template_name="index.html")),
+    path('reviews/<int:dealer_id>', TemplateView.as_view(template_name="index.html")),
+    path('reviews/dealer/<int:dealer_id>', TemplateView.as_view(template_name="index.html")),
+    path('postreview/<int:dealer_id>',TemplateView.as_view(template_name="index.html")),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

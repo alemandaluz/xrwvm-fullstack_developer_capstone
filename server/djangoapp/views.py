@@ -1,7 +1,3 @@
-# Uncomment the required imports before adding the code
-
- # Uncomment the required imports before adding the code
-
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
@@ -94,14 +90,24 @@ def get_dealerships(request, state="All"):
 
 
 def get_dealer_reviews(request, dealer_id):
-    # if dealer id has been provided
     if(dealer_id):
         endpoint = "/fetchReviews/dealer/"+str(dealer_id)
         reviews = get_request(endpoint)
+        
+        # Si reviews viene vacío o da error, devolvemos lista vacía segura
+        if reviews is None:
+            reviews = []
+            
         for review_detail in reviews:
             response = analyze_review_sentiments(review_detail['review'])
             print(response)
-            review_detail['sentiment'] = response['sentiment']
+            
+            # CONTROL DE DAÑOS TOTAL: Si response es None o no tiene la clave, ponemos neutral
+            if response and isinstance(response, dict) and 'sentiment' in response:
+                review_detail['sentiment'] = response['sentiment']
+            else:
+                review_detail['sentiment'] = "neutral"
+                
         return JsonResponse({"status":200,"reviews":reviews})
     else:
         return JsonResponse({"status":400,"message":"Bad Request"})

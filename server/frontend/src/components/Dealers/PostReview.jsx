@@ -5,6 +5,7 @@ import "../assets/style.css";
 import Header from '../Header/Header';
 
 
+
 const PostReview = () => {
   const [dealer, setDealer] = useState({});
   const [review, setReview] = useState("");
@@ -62,28 +63,39 @@ const PostReview = () => {
   }
 
   }
-  const get_dealer = async ()=>{
-    const res = await fetch(dealer_url, {
-      method: "GET"
-    });
-    const retobj = await res.json();
-    
-    if(retobj.status === 200) {
-      let dealerobjs = Array.from(retobj.dealer)
-      if(dealerobjs.length > 0)
-        setDealer(dealerobjs[0])
+  const get_dealer = async () => {
+    try {
+      const res = await fetch(dealer_url, { method: "GET" });
+      const retobj = await res.json();
+      
+      if (retobj.status === 200 && retobj.dealer) {
+        // Nos aseguramos de tratarlo como array solo si lo es, si no, directo al objeto
+        const dealerData = Array.isArray(retobj.dealer) ? retobj.dealer : [retobj.dealer];
+        if (dealerData.length > 0) {
+          setDealer(dealerData[0]);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching dealer:", error);
     }
-  }
+  };
 
-  const get_cars = async ()=>{
-    const res = await fetch(carmodels_url, {
-      method: "GET"
-    });
-    const retobj = await res.json();
-    
-    let carmodelsarr = Array.from(retobj.CarModels)
-    setCarmodels(carmodelsarr)
-  }
+  const get_cars = async () => {
+    try {
+      const res = await fetch(carmodels_url, { method: "GET" });
+      const retobj = await res.json();
+      
+      // Validamos que CarModels exista antes de operar con él
+      if (retobj && retobj.CarModels) {
+        setCarmodels(Array.from(retobj.CarModels));
+      } else {
+        setCarmodels([]); // Evitamos que sea undefined
+      }
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+      setCarmodels([]);
+    }
+  };
   useEffect(() => {
     get_dealer();
     get_cars();
